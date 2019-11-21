@@ -1,3 +1,6 @@
+import time
+
+
 class Engine(object):
     racers = []
     colors = ['black', 'red', '#39FF14', 'blue']
@@ -47,17 +50,18 @@ class Engine(object):
         for racer in self.racers:
             rp = racer_positions.copy()
             del rp[self.racers.index(racer)]
-            move = racer.get_next_move(racer_positions, self.get_map_at)
-            moves.append(move)
+            ro, co = racer.get_next_move(racer_positions, self.get_map_at)
+
+            r, c = racer.get_pos()
+
+            moves.append([r + ro, c + co])
 
         for i in range(len(self.racers)-1, -1, -1):
             racer = self.racers[i]
-            r, c = racer_positions[i]
-            ro, co = moves[i]
-            nr = r + ro
-            nc = c + co
+            nr, nc = moves[i]
 
-            killed = False
+            killed = True if moves.count([nr, nc]) > 1 else False
+
             try:
                 if not self.map[nr][nc]:
                     self.map[nr][nc] = racer.get_index()

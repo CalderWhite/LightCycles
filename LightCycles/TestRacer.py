@@ -14,15 +14,19 @@ class TestRacer(Racer):
         super().__init__(start_row, start_col, grid_width)
 
     def get_next_move(self, racer_positions, get_map_at):
-        dr, dc = self.directions[self.direction]
+        r, c = self.get_pos()
 
-        nr, nc = self.get_pos()
-        nr += dr
-        nc += dc
+        for i in range(4):
+            nr, nc = (r, c)
+            dr, dc = self.directions[self.direction]
+            nr += dr
+            nc += dc
 
-        gw = self.grid_width
-        if nr >= gw or nr < 0 or nc >= gw or nc < 0 or get_map_at(nr, nc):
-            self.direction += 1
-            self.direction %= 4
+            gw = self.grid_width
+            if nr >= gw or nr < 0 or nc >= gw or nc < 0 or get_map_at(nr, nc):
+                self.direction += 1
+                self.direction %= 4
+            else:
+                return self.directions[self.direction]
 
-        return self.directions[self.direction]
+        return [0, 0]
