@@ -5,7 +5,7 @@ from LightCycles.Engine import Engine
 from LightCycles.TestRacer import TestRacer
 
 WIDTH = 100
-SCREEN_WIDTH = 1200
+SCREEN_WIDTH = 1000
 FPS_MAX = 60
 TARGET_DURATION = 1/FPS_MAX
 running = True
@@ -42,26 +42,31 @@ def main():
     b.direction = 2
     e.add_racer(b)
 
-    t1 = time.time()
+    # perf_counter() is perferred to time() as of 3.smth
+    t1 = time.perf_counter()
     t2 = None
     fps_text = s.create_text(10, 10, text="", font="ansifixed", anchor="w", fill="white")
 
     # the engine has to render the first frame seperately as all other rendering
     # is done after an update has been made to the game state
     e.draw_first()
+
+    # using tk.mainloop() is preferred to using a while True loop for reasons you
+    # can google. The way it works is a little weird so I can restructure this tmrw
+    # since i've done it b4.
     while running:
         e.update()
 
         # calculate extra time left in cycle and sit idle for it
-        t2 = time.time()
+        t2 = time.perf_counter()
         tdiff = t2-t1
         delay = TARGET_DURATION-tdiff
         if delay > 0:
             time.sleep(delay)
 
-        # display fps
-        fps = int(1/(tdiff))
-        s.itemconfig(fps_text, text=str(fps))
+        # display fps, no int calls pls
+        fps = 1/(tdiff)
+        s.itemconfig(fps_text, text=str(fps)[:4])
 
         t1 = t2
 
