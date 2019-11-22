@@ -1,7 +1,7 @@
 class Engine(object):
     racers = []
-    colors = ['black', 'red', '#39FF14', 'blue', '#FA8072', '#D2691E',
-              '#9966CC', 'white', '#F4A460', '#DDA0DD']
+    colors = ['black', 'red', '#39FF14', 'blue', '#FA8072', '#D2691E']
+    tracer_colors = ['black', '#FF8888', '#B9FFAB', '#4A4AFF', '#FFB6AD', '#E69053']
 
     def __init__(self, width, screen_width, screen):
         self.width = width
@@ -21,7 +21,9 @@ class Engine(object):
 
     def add_racer(self, racer):
         self.racers.append(racer)
+        print(len(self.racers))
         racer.set_color(self.colors[len(self.racers)])
+        racer.set_tracer_color(self.tracer_colors[len(self.racers)])
         racer.set_index(len(self.racers))
         r, c = racer.get_pos()
         self.map[r][c] = len(self.racers)
@@ -56,6 +58,7 @@ class Engine(object):
 
         for i in range(len(self.racers)-1, -1, -1):
             racer = self.racers[i]
+            r, c = racer.get_pos()
             nr, nc = moves[i]
 
             killed = True if moves.count([nr, nc]) > 1 else False
@@ -69,10 +72,11 @@ class Engine(object):
             except IndexError:
                 killed = True
 
+            self.screen.itemconfig(self.rects[nr][nc], fill=racer.get_tracer_color())
             if killed:
                 del self.racers[i]
             else:
-                self.screen.itemconfig(self.rects[nr][nc], fill=racer.get_color())
+                self.screen.itemconfig(self.rects[r][c], fill=racer.get_color())
 
         self.screen.update()
 
