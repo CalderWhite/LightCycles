@@ -42,7 +42,7 @@ def main():
     b.direction = 2
     e.add_racer(b)
 
-    # perf_counter() is perferred to time() as of 3.smth
+    # perf_counter() is perferred to time()
     t1 = time.perf_counter()
     t2 = None
     fps_text = s.create_text(10, 10, text="", font="ansifixed", anchor="w", fill="white")
@@ -51,9 +51,6 @@ def main():
     # is done after an update has been made to the game state
     e.draw_first()
 
-    # using tk.mainloop() is preferred to using a while True loop for reasons you
-    # can google. The way it works is a little weird so I can restructure this tmrw
-    # since i've done it b4.
     while running:
         e.update()
 
@@ -64,7 +61,7 @@ def main():
         if delay > 0:
             time.sleep(delay)
 
-        # display fps, no int calls pls
+        # display fps
         fps = 1/(tdiff)
         s.itemconfig(fps_text, text=str(fps)[:4])
 
