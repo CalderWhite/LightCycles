@@ -1,9 +1,7 @@
-import time
-
-
 class Engine(object):
     racers = []
-    colors = ['black', 'red', '#39FF14', 'blue']
+    colors = ['black', 'red', '#39FF14', 'blue', '#FA8072', '#D2691E',
+              '#9966CC', 'white', '#F4A460', '#DDA0DD']
 
     def __init__(self, width, screen_width, screen):
         self.width = width
@@ -77,3 +75,12 @@ class Engine(object):
                 self.screen.itemconfig(self.rects[nr][nc], fill=racer.get_color())
 
         self.screen.update()
+
+    def has_winner(self):
+        return len(self.racers) < 2
+
+    def get_winner(self):
+        if len(self.racers) == 0:
+            return None
+        else:
+            return self.racers[0]

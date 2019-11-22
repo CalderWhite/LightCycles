@@ -1,24 +1,29 @@
 import time
 import tkinter
+import random
 
 from LightCycles.Engine import Engine
 from LightCycles.TestRacer import TestRacer
+
+from Racers.ScaredyCat import ScaredyCat
 
 WIDTH = 100
 SCREEN_WIDTH = 1000
 FPS_MAX = 60
 TARGET_DURATION = 1/FPS_MAX
 running = True
+root = tkinter.Tk()
 
 
 def keydown(event):
     global running
-    if event.keycode == 9:
+    if event.keycode in [9, 24]:
         running = False
+        root.destroy()
 
 
 def main():
-    root = tkinter.Tk()
+    global running
 
     # center the window when it pops up
     ws = root.winfo_screenwidth()
@@ -34,13 +39,18 @@ def main():
 
     s.bind("<KeyPress>", keydown)
 
-    # add our game objects
     e = Engine(WIDTH, SCREEN_WIDTH, s)
-    a = TestRacer(0, 0, WIDTH)
+
+    # add our game objects
+    """
+    a = ScaredyCat(0, 0, WIDTH)
     e.add_racer(a)
-    b = TestRacer(WIDTH-1, WIDTH-1, WIDTH)
-    b.direction = 2
-    e.add_racer(b)
+    """
+
+    for i in range(2):
+        a = ScaredyCat(random.randint(0, WIDTH-1), random.randint(0, WIDTH-1), WIDTH)
+        a.direction = random.randint(0, 3)
+        e.add_racer(a)
 
     # perf_counter() is perferred to time()
     t1 = time.perf_counter()
@@ -67,7 +77,15 @@ def main():
 
         t1 = t2
 
-    root.destroy()
+        running = not e.has_winner()
+
+    winner = e.get_winner()
+    if winner:
+        print(winner.get_color(), "wins")
+    else:
+        print("Tie.")
+
+    root.mainloop()
 
 
 if __name__ == "__main__":
