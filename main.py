@@ -9,7 +9,7 @@ from Racers.ScaredyCat import ScaredyCat
 
 WIDTH = 100
 SCREEN_WIDTH = 1000
-FPS_MAX = 60
+FPS_MAX = 10
 TARGET_DURATION = 1/FPS_MAX
 running = True
 root = tkinter.Tk()
@@ -52,9 +52,6 @@ def main():
         a.direction = random.randint(0, 3)
         e.add_racer(a)
 
-    # perf_counter() is perferred to time()
-    t1 = time.perf_counter()
-    t2 = None
     fps_text = s.create_text(10, 10, text="", font="ansifixed", anchor="w", fill="white")
 
     # the engine has to render the first frame seperately as all other rendering
@@ -62,22 +59,23 @@ def main():
     e.draw_first()
 
     while running:
+        t1 = time.perf_counter()
         e.update()
+        running = not e.has_winner()
 
         # calculate extra time left in cycle and sit idle for it
         t2 = time.perf_counter()
         tdiff = t2-t1
         delay = TARGET_DURATION-tdiff
+
         if delay > 0:
             time.sleep(delay)
 
-        # display fps
-        fps = 1/(tdiff)
+        # recalc fps to include the delay
+        t2 = time.perf_counter()
+        fps = 1/(t2-t1)
+
         s.itemconfig(fps_text, text=str(fps)[:4])
-
-        t1 = t2
-
-        running = not e.has_winner()
 
     winner = e.get_winner()
     if winner:
