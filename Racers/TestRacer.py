@@ -13,7 +13,7 @@ class TestRacer(Racer):
     def __init__(self, start_row, start_col, grid_width):
         super().__init__(start_row, start_col, grid_width)
 
-    def get_next_move(self, racer_positions, get_map_at):
+    def get_next_move(self, racer_positions, _map):
         r, c = self.get_pos()
 
         for i in range(4):
@@ -23,7 +23,7 @@ class TestRacer(Racer):
             nc += dc
 
             gw = self.grid_width
-            if nr >= gw or nr < 0 or nc >= gw or nc < 0 or get_map_at(nr, nc):
+            if nr >= gw or nr < 0 or nc >= gw or nc < 0 or _map[nr][nc]:
                 self.direction += 1
                 self.direction %= 4
             else:
