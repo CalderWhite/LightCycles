@@ -59,21 +59,24 @@ def spaceRow(r, c, direction, Map, currentDepth, maxDepth, pspace, maxpspace, ch
     if currentDepth <= maxDepth and pspace < maxpspace:
         if direction == 1:
             for i in range(c, numCols):
-                if Map[r][i] == 0 and (r, i) not in checked:
-                    space += 1
-                    checked.append((r, i))
-                    if r+1 != numRows:
-                        if Map[r+1][i] == 0:
-                            gaps += 1
-                            ret = spaceCol(r+1, i, 1, Map, currentDepth, maxDepth, space+pspace, maxpspace, checked, maxGaps)
-                            space += ret[0]
-                            checked = ret[1]
-                    if r-1 != -1:
-                        if Map[r-1][i] == 0:
-                            gaps += 1
-                            ret = spaceCol(r-1, i, -1, Map, currentDepth, maxDepth, space+pspace, maxpspace, checked, maxGaps)
-                            space += ret[0]
-                            checked = ret[1]
+                if (r, i) not in checked:
+                    if Map[r][i] == 0:
+                        space += 1
+                        checked.append((r, i))
+                        if r+1 != numRows:
+                            if Map[r+1][i] == 0:
+                                gaps += 1
+                                ret = spaceCol(r+1, i, 1, Map, currentDepth, maxDepth, space+pspace, maxpspace//5, checked, maxGaps)
+                                space += ret[0]
+                                checked = ret[1]
+                        if r-1 != -1:
+                            if Map[r-1][i] == 0:
+                                gaps += 1
+                                ret = spaceCol(r-1, i, -1, Map, currentDepth, maxDepth, space+pspace, maxpspace//5, checked, maxGaps)
+                                space += ret[0]
+                                checked = ret[1]
+                    else:
+                        break
                 else:
                     break
                 if gaps > maxGaps:
@@ -82,21 +85,24 @@ def spaceRow(r, c, direction, Map, currentDepth, maxDepth, pspace, maxpspace, ch
                     return space, checked
         else:
             for i in range(c, -1, -1):
-                if Map[r][i] == 0 and (r, i) not in checked:
-                    space += 1
-                    checked.append((r, i))
-                    if r+1 != numRows:
-                        if Map[r+1][i] == 0:
-                            gaps += 1
-                            ret = spaceCol(r+1, i, 1, Map, currentDepth, maxDepth, space+pspace, maxpspace, checked, maxGaps)
-                            space += ret[0]
-                            checked = ret[1]
-                    if r-1 != -1:
-                        if Map[r-1][i] == 0:
-                            gaps += 1
-                            ret = spaceCol(r-1, i, -1, Map, currentDepth, maxDepth, space+pspace, maxpspace, checked, maxGaps)
-                            space += ret[0]
-                            checked = ret[1]
+                if (r, i) not in checked:
+                    if Map[r][i] == 0:
+                        space += 1
+                        checked.append((r, i))
+                        if r+1 != numRows:
+                            if Map[r+1][i] == 0:
+                                gaps += 1
+                                ret = spaceCol(r+1, i, 1, Map, currentDepth, maxDepth, space+pspace, maxpspace//5, checked, maxGaps)
+                                space += ret[0]
+                                checked = ret[1]
+                        if r-1 != -1:
+                            if Map[r-1][i] == 0:
+                                gaps += 1
+                                ret = spaceCol(r-1, i, -1, Map, currentDepth, maxDepth, space+pspace, maxpspace//5, checked, maxGaps)
+                                space += ret[0]
+                                checked = ret[1]
+                    else:
+                        break
                 else:
                     break
                 if gaps > maxGaps:
@@ -108,7 +114,7 @@ def spaceRow(r, c, direction, Map, currentDepth, maxDepth, pspace, maxpspace, ch
             for i in range(c, numCols):
                 if Map[r][i] == 0 and (r, i) not in checked:
                     space += 1
-                    checked.append((r, i))
+                    #checked.append((r, i))
                 else:
                     break
                 if space+pspace > maxpspace:
@@ -117,7 +123,7 @@ def spaceRow(r, c, direction, Map, currentDepth, maxDepth, pspace, maxpspace, ch
             for i in range(c, -1, -1):
                 if Map[r][i] == 0 and (r, i) not in checked:
                     space += 1
-                    checked.append((r, i))
+                    #checked.append((r, i))
                 else:
                     break
                 if space+pspace > maxpspace:
@@ -137,21 +143,24 @@ def spaceCol(r, c, direction, Map, currentDepth, maxDepth, pspace, maxpspace, ch
     if currentDepth <= maxDepth and pspace < maxpspace:
         if direction == 1:
             for i in range(r, numRows):
-                if Map[i][c] == 0 and (i, c) not in checked:
-                    space += 1
-                    checked.append((i, c))
-                    if c+1 != numRows:
-                        if Map[i][c+1] == 0:
-                            gaps += 1
-                            ret = spaceRow(i, c+1, 1, Map, currentDepth, maxDepth, space+pspace, maxpspace, checked, maxGaps)
-                            space += ret[0]
-                            checked = ret[1]
-                    if c-1 != -1:
-                        if Map[i][c-1] == 0:
-                            gaps += 1
-                            ret = spaceRow(i, c-1, -1, Map, currentDepth, maxDepth, space+pspace, maxpspace, checked, maxGaps)
-                            space += ret[0]
-                            checked = ret[1]
+                if (i, c) not in checked:
+                    if Map[i][c] == 0:
+                        space += 1
+                        checked.append((i, c))
+                        if c+1 != numRows:
+                            if Map[i][c+1] == 0:
+                                gaps += 1
+                                ret = spaceRow(i, c+1, 1, Map, currentDepth, maxDepth, space+pspace, maxpspace//5, checked, maxGaps)
+                                space += ret[0]
+                                checked = ret[1]
+                        if c-1 != -1:
+                            if Map[i][c-1] == 0:
+                                gaps += 1
+                                ret = spaceRow(i, c-1, -1, Map, currentDepth, maxDepth, space+pspace, maxpspace//5, checked, maxGaps)
+                                space += ret[0]
+                                checked = ret[1]
+                    else:
+                        break
                 else:
                     break
                 if gaps > maxGaps:
@@ -160,21 +169,24 @@ def spaceCol(r, c, direction, Map, currentDepth, maxDepth, pspace, maxpspace, ch
                     return space, checked
         else:
             for i in range(r, -1, -1):
-                if Map[i][c] == 0 and (i, c) not in checked:
-                    space += 1
-                    checked.append((i, c))
-                    if c+1 != numRows:
-                        if Map[i][c+1] == 0:
-                            gaps += 1
-                            ret = spaceRow(i, c+1, 1, Map, currentDepth, maxDepth, space+pspace, maxpspace, checked, maxGaps)
-                            space += ret[0]
-                            checked = ret[1]
-                    if c-1 != -1:
-                        if Map[i][c-1] == 0:
-                            gaps += 1
-                            ret = spaceRow(i, c-1, -1, Map, currentDepth, maxDepth, space+pspace, maxpspace, checked, maxGaps)
-                            space += ret[0]
-                            checked = ret[1]
+                if (i, c) not in checked:
+                    if Map[i][c] == 0:
+                        space += 1
+                        checked.append((i, c))
+                        if c+1 != numRows:
+                            if Map[i][c+1] == 0:
+                                gaps += 1
+                                ret = spaceRow(i, c+1, 1, Map, currentDepth, maxDepth, space+pspace, maxpspace//5, checked, maxGaps)
+                                space += ret[0]
+                                checked = ret[1]
+                        if c-1 != -1:
+                            if Map[i][c-1] == 0:
+                                gaps += 1
+                                ret = spaceRow(i, c-1, -1, Map, currentDepth, maxDepth, space+pspace, maxpspace//5, checked, maxGaps)
+                                space += ret[0]
+                                checked = ret[1]
+                    else:
+                        break
                 else:
                     break
                 if gaps > maxGaps:
@@ -185,7 +197,7 @@ def spaceCol(r, c, direction, Map, currentDepth, maxDepth, pspace, maxpspace, ch
         if direction == 1:
             for i in range(r, numRows):
                 if Map[i][c] == 0 and (i, c) not in checked:
-                    checked.append((i, c))
+                    #checked.append((i, c))
                     space += 1
                 else:
                     break
@@ -194,7 +206,7 @@ def spaceCol(r, c, direction, Map, currentDepth, maxDepth, pspace, maxpspace, ch
         else:
             for i in range(r, -1, -1):
                 if Map[i][c] == 0 and (i, c) not in checked:
-                    checked.append((i, c))
+                    c#hecked.append((i, c))
                     space += 1
                 else:
                     break
@@ -212,10 +224,37 @@ def findMove(Map, r, c):
 ##    col2 = pathLength(col[c:], 1)
 ##    row1 = pathLength(row[:r], -1)
 ##    row2 = pathLength(row[r:], 1)
-    col1 = spaceCol(r-1, c, -1, Map, 0, 900, 0, 2000, [], 50)[0]
-    col2 = spaceCol(r+1, c, 1, Map, 0, 900, 0, 2000, [], 50)[0]
-    row1 = spaceRow(r, c-1, -1, Map, 0, 900, 0, 2000, [], 50)[0]
-    row2 = spaceRow(r, c+1, -1, Map, 0, 900, 0, 2000, [], 50)[0]
+    if 0 <= r-1 < numRows:
+        if Map[r-1][c] == 0:
+            col1 = spaceCol(r-1, c, -1, Map, 0, 50, 0, 10000, [], 50)[0]
+        else:
+            col1 = 0
+    else:
+        col1 = 0
+
+    if 0 <= r+1 < numRows:
+        if Map[r+1][c] == 0:
+            col2 = spaceCol(r+1, c, 1, Map, 0, 50, 0, 10000, [], 50)[0]
+        else:
+            col2 = 0
+    else:
+        col2 = 0
+
+    if 0 <= c-1 < numCols:
+        if Map[r][c-1] == 0:
+            row1 = spaceRow(r, c-1, -1, Map, 0, 50, 0, 10000, [], 50)[0]
+        else:
+            row1 = 0
+    else:
+        row1 = 0
+
+    if 0 <= c+1 < numCols:
+        if Map[r][c+1] == 0:
+            row2 = spaceRow(r, c+1, -1, Map, 0, 50, 0, 10000, [], 50)[0]
+        else:
+            row2 = 0
+    else:
+        row2 = 0
     
     dirQ = [[(-1, 0), col1], [(1, 0), col2], [(0, -1), row1], [(0, 1), row2]]
     dirQ.sort(key=lambda x: x[1])
@@ -237,7 +276,7 @@ class SpaceHunter(Racer):
         (0, -1),
         (-1, 0)
     ]
-    lastMove = None
+    lastMove = directions[1]
     lastSpace = 0
 
     def __init__(self, start_row, start_col, grid_width):
@@ -249,16 +288,17 @@ class SpaceHunter(Racer):
 
         for Dir in dirQ:
             if Dir[0] == self.lastMove:
-                if abs(self.lastSpace-Dir[1]) <= 5:
+                if self.lastSpace/(Dir[1]+1) <= 0.8 or self.lastSpace/(Dir[1]+1) >= 1.2:
+                    self.lastMove = move
+                    for Dir in dirQ:
+                        if Dir[0] == move:
+                            self.lastSpace = Dir[1]
+                            break
                     return self.lastMove
+                else:
+                    break
 
-        self.lastMove = move
-        for Dir in dirQ:
-            if Dir[0] == move:
-                self.lastSpace = Dir[1]
-                break
-
-        return move
+        return self.lastMove
         #if minScore < 1500:
         #    return move
     
