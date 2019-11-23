@@ -1,8 +1,10 @@
 import multiprocessing as mp
 
+
 def get_next_move(inp):
     racer_get_next_move, racer_positions, Map, i = inp
     return racer_get_next_move(racer_positions, Map), i
+
 
 class Engine(object):
     racers = []
@@ -55,12 +57,16 @@ class Engine(object):
         moves = []
 
         # first get all the moves to prevent an unfair advantage
-        vals = self.pool.map(get_next_move, [[self.racers[i].get_next_move, racer_positions, self.map, i] for i in range(len(self.racers))])
-        vals.sort(key=lambda x: x[1])
+        directions = self.pool.map(get_next_move,
+                                   [[self.racers[i].get_next_move,
+                                     racer_positions, self.map, i]
+                                    for i in range(len(self.racers))])
+        directions.sort(key=lambda x: x[1])
+
         for i in range(len(self.racers)):
             rp = racer_positions.copy()
             del rp[self.racers.index(self.racers[i])]
-            ro, co = vals[i][0]
+            ro, co = directions[i][0]
 
             r, c = self.racers[i].get_pos()
 
