@@ -1,5 +1,6 @@
 from LightCycles.Racer import Racer
 
+
 def findSpace(Map):
     numRows = len(Map)
     numCols = len(Map[0])
