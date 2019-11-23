@@ -1,3 +1,11 @@
+import multiprocessing as mp
+
+
+def get_next_move(inp):
+    racer_get_next_move, racer_positions, Map, i = inp
+    return racer_get_next_move(racer_positions, Map), i
+
+
 class Engine(object):
     racers = []
     colors = ['black', 'red', '#39FF14', 'blue', '#FA8072', '#D2691E']
@@ -19,6 +27,7 @@ class Engine(object):
             ]
             for r in range(width)
         ]
+        self.pool = mp.Pool(mp.cpu_count())
 
     def add_racer(self, racer):
         self.racers.append(racer)
@@ -48,12 +57,18 @@ class Engine(object):
         moves = []
 
         # first get all the moves to prevent an unfair advantage
-        for racer in self.racers:
-            rp = racer_positions.copy()
-            del rp[self.racers.index(racer)]
-            ro, co = racer.get_next_move(racer_positions, self.map)
+        directions = self.pool.map(get_next_move,
+                                   [[self.racers[i].get_next_move,
+                                     racer_positions, self.map, i]
+                                    for i in range(len(self.racers))])
+        directions.sort(key=lambda x: x[1])
 
-            r, c = racer.get_pos()
+        for i in range(len(self.racers)):
+            rp = racer_positions.copy()
+            del rp[self.racers.index(self.racers[i])]
+            ro, co = directions[i][0]
+
+            r, c = self.racers[i].get_pos()
 
             moves.append([r + ro, c + co])
 
