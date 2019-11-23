@@ -6,10 +6,11 @@ from LightCycles.Engine import Engine
 from LightCycles.TestRacer import TestRacer
 
 from Racers.FieldFinder import FieldFinder
+from Racers.SpaceHunter import SpaceHunter
 
 WIDTH = 200
-SCREEN_WIDTH = 1600
-FPS_MAX = 120
+SCREEN_WIDTH = 800
+FPS_MAX = 10
 TARGET_DURATION = 1/FPS_MAX
 running = True
 root = tkinter.Tk()
@@ -47,8 +48,8 @@ def main():
         a.direction = random.randint(0, 3)
         e.add_racer(a)
 
-    for i in range(2):
-        a = FieldFinder(random.randint(0, WIDTH-1), random.randint(0, WIDTH-1), WIDTH)
+    for i in range(1):
+        a = SpaceHunter(random.randint(0, WIDTH-1), random.randint(0, WIDTH-1), WIDTH)
         a.direction = random.randint(0, 3)
         e.add_racer(a)
 

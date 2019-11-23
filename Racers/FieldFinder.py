@@ -20,7 +20,7 @@ class FieldFinder(Racer):
         y = y1-y2
         return x*x + y*y
 
-    def get_dir_dists_sqrd(self, pos, get_map_at):
+    def get_dir_dists_sqrd(self, pos, Map):
         gw = self.grid_width
         r, c = pos
 
@@ -37,7 +37,7 @@ class FieldFinder(Racer):
                 nr += dirs[i][0]
                 nc += dirs[i][1]
 
-                if nr >= gw or nr < 0 or nc >= gw or nc < 0 or get_map_at(nr, nc):
+                if nr >= gw or nr < 0 or nc >= gw or nc < 0 or Map[nr][nc]:
                     good_bois.append(dirs[i])
                     # append the position instead of the new one, since the new one
                     # gets you killed
@@ -51,7 +51,7 @@ class FieldFinder(Racer):
 
         return dist, good_bois, good_pos
 
-    def get_areas(self, dir, dists, dirs, positions, get_map_at):
+    def get_areas(self, dir, dists, dirs, positions, Map):
         # do not consider going backwards
         dir_inv = (-dir[0], -dir[1])
         dir_inv_i = dirs.index(dir_inv)
@@ -71,7 +71,7 @@ class FieldFinder(Racer):
             _dir = dirs[i]
             _pos = positions[i]
 
-            _ds, _dr, _ps = self.get_dir_dists_sqrd(_pos, get_map_at)
+            _ds, _dr, _ps = self.get_dir_dists_sqrd(_pos, Map)
 
             # do not consider going backwards
             # otherwise the area would be deceptively large
@@ -99,15 +99,15 @@ class FieldFinder(Racer):
         return areas, good_dirs, good_pos
 
 
-    def get_next_move(self, racer_positions, get_map_at):
-        dists, dirs, positions = self.get_dir_dists_sqrd(self.get_pos(), get_map_at)
+    def get_next_move(self, racer_positions, Map):
+        dists, dirs, positions = self.get_dir_dists_sqrd(self.get_pos(), Map)
 
         # area based choice
         if self.use_dist:
             return dirs[dists.index(max(dists))]
 
         dir = self.directions[self.direction]
-        areas, good_dirs, good_pos = self.get_areas(dir, dists, dirs, positions, get_map_at)
+        areas, good_dirs, good_pos = self.get_areas(dir, dists, dirs, positions, Map)
 
         """
         for i in range(3):

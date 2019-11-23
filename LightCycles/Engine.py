@@ -51,7 +51,7 @@ class Engine(object):
         for racer in self.racers:
             rp = racer_positions.copy()
             del rp[self.racers.index(racer)]
-            ro, co = racer.get_next_move(racer_positions, self.get_map_at)
+            ro, co = racer.get_next_move(racer_positions, self.map)
 
             r, c = racer.get_pos()
 
