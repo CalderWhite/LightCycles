@@ -3,11 +3,12 @@ class Engine(object):
     colors = ['black', 'red', '#39FF14', 'blue', '#FA8072', '#D2691E']
     tracer_colors = ['black', '#FF8888', '#B9FFAB', '#4A4AFF', '#FFB6AD', '#E69053']
 
-    def __init__(self, width, screen_width, screen):
+    def __init__(self, width, screen_width, screen, render=True):
         self.width = width
         self.screen_width = screen_width
         self.scaling_factor = screen_width / width
         sf = self.scaling_factor
+        self.render = render
         self.screen = screen
         self.map = [[0]*width for i in range(width)]
         self.rects = [
@@ -72,13 +73,17 @@ class Engine(object):
             except IndexError:
                 killed = True
 
-            self.screen.itemconfig(self.rects[nr][nc], fill=racer.get_tracer_color())
+            if self.render:
+                self.screen.itemconfig(self.rects[nr][nc], fill=racer.get_tracer_color())
+
             if killed:
                 del self.racers[i]
             else:
-                self.screen.itemconfig(self.rects[r][c], fill=racer.get_color())
+                if self.render:
+                    self.screen.itemconfig(self.rects[r][c], fill=racer.get_color())
 
-        self.screen.update()
+        if self.render:
+            self.screen.update()
 
     def has_winner(self):
         return len(self.racers) < 2
