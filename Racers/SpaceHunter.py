@@ -23,6 +23,26 @@ def findSpace(Map):
 
     return maxRow, maxCol
 
+def dom(array):
+    numZ = sum([subarray.count(0) for subarray in array])
+    if numZ > sum([len(subarray) for subarray in array])/2:
+        return 0
+    return 1
+
+def sample(Map, n):
+    sampled = []
+    for row in range(0,len(Map),n):
+        srow = []
+        for col in range(0, len(Map[0]), n):
+            srow.append(dom([x[col:col+n] for x in Map[row:row+n]]))
+        sampled.append(srow)
+    return sampled
+
+def sampleToQuarterQuadrants(Map):
+    while len(Map) > 8:
+        Map = sample(Map, 2)
+    return Map
+
 def normalize(x):
     if x>0:
         return 1
@@ -219,11 +239,12 @@ def findMove(Map, r, c):
     numCols = len(Map[0])
     col = [row[c] for row in Map]
     row = Map[r]
+
+    sampledMap = sampleToQuarterQuadrants(Map) # smth smaller than a 64 by 64 array
+    rowQuad = int(len(sampledMap)/numRows*r)
+    colQuad = int(len(sampledMap[0])/numCols*c)
     
-##    col1 = pathLength(col[:c], -1)
-##    col2 = pathLength(col[c:], 1)
-##    row1 = pathLength(row[:r], -1)
-##    row2 = pathLength(row[r:], 1)
+    
     if 0 <= r-1 < numRows:
         if Map[r-1][c] == 0:
             col1 = spaceCol(r-1, c, -1, Map, 0, 50, 0, 10000, [], 50)[0]
@@ -256,9 +277,16 @@ def findMove(Map, r, c):
     else:
         row2 = 0
     
-    dirQ = [[(-1, 0), col1], [(1, 0), col2], [(0, -1), row1], [(0, 1), row2]]
+    dirQT = [[(-1, 0), col1], [(1, 0), col2], [(0, -1), row1], [(0, 1), row2]]
+    # check if going towards good quarter-quadrant
+    dirQP = [] # preferred
+    dirQL = [] # last resort
+    
+    for Dir in dirQT:
+        if #todo
     dirQ.sort(key=lambda x: x[1])
     dirQ = dirQ[::-1]
+    
     #print(dirQ)
     for Dir in dirQ:
         tr = r+Dir[0][0]
