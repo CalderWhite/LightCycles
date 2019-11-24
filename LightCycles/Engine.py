@@ -1,5 +1,5 @@
 import multiprocessing as mp
-
+import random
 
 def get_next_move(inp):
     racer_get_next_move, racer_positions, Map, i = inp
@@ -10,6 +10,12 @@ class Engine(object):
     racers = []
     colors = ['black', 'red', '#39FF14', 'blue', '#FA8072', '#D2691E']
     tracer_colors = ['black', '#FF8888', '#B9FFAB', '#4A4AFF', '#FFB6AD', '#E69053']
+    moves = [
+        (0, 1),
+        (1, 0),
+        (0, -1),
+        (-1, 0)
+    ]
 
     def __init__(self, width, screen_width, screen, render=True):
         self.width = width
@@ -57,20 +63,56 @@ class Engine(object):
         moves = []
 
         # first get all the moves to prevent an unfair advantage
-        directions = self.pool.map(get_next_move,
+        directions = self.pool.imap_unordered(get_next_move,
                                    [[self.racers[i].get_next_move,
                                      racer_positions, self.map, i]
-                                    for i in range(len(self.racers))])
-        directions.sort(key=lambda x: x[1])
+                                    for i in range(len(self.racers))],
+                                    chunksize = max(len(self.racers)//mp.cpu_count(), 1))
+        #directions.sort(key=lambda x: x[1])
+        finishedInTime = []
 
         for i in range(len(self.racers)):
-            rp = racer_positions.copy()
-            del rp[self.racers.index(self.racers[i])]
-            ro, co = directions[i][0]
+            try:
+                nextMove, racerIndex = directions.next(0.1)
+                finishedInTime.append(racerIndex)
+                
+                rp = racer_positions.copy()
+                del rp[self.racers.index(self.racers[racerIndex])]
+                ro, co = nextMove
 
-            r, c = self.racers[i].get_pos()
+                r, c = self.racers[racerIndex].get_pos()
 
-            moves.append([r + ro, c + co])
+                moves.append([r + ro, c + co])
+            except mp.TimeoutError:
+                pass
+
+        for i in range(len(self.racers)):
+            if i not in finishedInTime:
+                print("Racer",self.racers[i].color,"failed to return a move in time.")
+                # using a random, non-lethal move instead
+                
+                rp = racer_positions.copy()
+                del rp[self.racers.index(self.racers[i])]
+                
+                r, c = self.racers[i].get_pos()
+                
+                _moves = self.moves.copy()
+                for move in self.moves:
+                    nr, nc = (r+move[0], c+move[1])
+                    if 0<=nr<len(self.map) and 0<=nc<len(self.map[0]):
+                        if self.map[nr][nc] != 0:
+                            _moves.remove(move)
+                    else:
+                        _moves.remove(move)
+
+                if len(_moves) == 0:
+                    _moves = [(0,0)]
+                
+                ro, co = random.choice(_moves)
+
+                
+
+                moves.append([r + ro, c + co])
 
         for i in range(len(self.racers)-1, -1, -1):
             racer = self.racers[i]
