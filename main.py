@@ -3,7 +3,6 @@ import tkinter
 import random
 
 from LightCycles.Engine import Engine
-from LightCycles.TestRacer import TestRacer
 
 from Racers.FieldFinder import FieldFinder
 from Racers.SpaceHunter import SpaceHunter
