@@ -1,4 +1,4 @@
-from .Racer import Racer
+from LightCycles.Racer import Racer
 
 
 class TestRacer(Racer):

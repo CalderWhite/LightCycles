@@ -3,14 +3,14 @@ import tkinter
 import random
 
 from LightCycles.Engine import Engine
-from LightCycles.TestRacer import TestRacer
 
+from Racers.TestRacer import TestRacer
 from Racers.FieldFinder import FieldFinder
 from Racers.SpaceHunter import SpaceHunter
 
 WIDTH = 200
 SCREEN_WIDTH = 800
-FPS_MAX = 10
+FPS_MAX = 100
 TARGET_DURATION = 1/FPS_MAX
 running = True
 root = tkinter.Tk()
